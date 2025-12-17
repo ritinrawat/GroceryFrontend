@@ -60,8 +60,8 @@ const Navbar = () => {
   };
 
   return (
-<header className="bg-white shadow sticky top-0 z-50 p-3">
-  <div className="max-w-7xl mx-auto px-4 py-3">
+<header className="bg-white shadow sticky top-0 z-50 ">
+  <div className="max-w-7xl mx-auto lg:p-5 p-3 ">
 
     {/* WRAPPER: Mobile => column, Desktop => row */}
     <div className="flex flex-col md:flex-row md:items-start justify-between gap-3">
@@ -98,10 +98,10 @@ const Navbar = () => {
         {addcartItems.length > 0 ? (
   <button
   onClick={toggleCart}
-  className="relative flex items-center justify-center w-14 h-14 rounded-full bg-[#059363] text-white shadow-lg"
+  className="relative flex items-center justify-center w-13 h-13 rounded-full bg-[#059363] text-white shadow-lg"
 >
   {/* Cart Icon */}
-  <FiShoppingCart className="text-2xl" />
+  <FiShoppingCart className="text-lg" />
 
   {/* Item Count Badge */}
   {itemCount > 0 && (
@@ -112,7 +112,7 @@ const Navbar = () => {
 </button>
 ) : (
   <button
-    className="flex items-center justify-center gap-2 bg-gray-200 text-black rounded-md px-3 py-2 min-w-[60px] h-[45px] transition-all"
+    className="relative flex items-center justify-center w-13 h-13 rounded-full bg-gray-300 text-white shadow-lg"
   >
     <FiShoppingCart className="text-lg" />
   </button>
@@ -128,8 +128,8 @@ const Navbar = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             type="text"
-            placeholder='Search "egg"'
-            className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-md text-sm focus:outline-none"
+            placeholder='Search "Products"'
+            className="w-full pl-10 px-4 py-2 bg-gray-100 rounded-md text-sm focus:outline-none"
           />
         </div>
 

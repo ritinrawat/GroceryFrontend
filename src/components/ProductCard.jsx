@@ -40,7 +40,7 @@ quantity = currentItem ? currentItem.quantity : 0;
       src={productImage}
       alt={productName}
       className="
-        h-20 w-full object-contain p-2   
+        h-20 w-full  object-contain p-2   
         sm:h-28 sm:p-3       /* bigger on tablet/desktop */
       "
     />
