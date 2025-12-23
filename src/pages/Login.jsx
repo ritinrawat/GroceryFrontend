@@ -35,66 +35,64 @@ function Login() {
  }
       }
   return (
-      <div className="fixed inset-0 bg-gray-100 bg-opacity-60 flex items-center justify-center z-50">
-      {/* Modal Box */}
-      <div className="bg-white rounded-2xl w-[90%] sm:w-[400px] md:w-[460px] p-8 relative shadow-xl">
-        
-        {/* Optional Back Arrow */}
-        <div className="absolute top-4 left-4 text-gray-500 text-xl cursor-pointer">
-          ←
-        </div>
+    <div className="fixed inset-0 bg-gray-100 bg-opacity-60 flex items-center justify-center z-50 px-3">
+  {/* Modal Box */}
+  <div className="bg-white rounded-2xl w-full max-w-[420px] p-5 sm:p-8 relative shadow-xl">
 
-        {/* Logo + Heading */}
-        <div className="flex flex-col items-center mb-6 mt-4">
-  
-          
-          <h2 className="text-2xl font-bold text-center">login</h2>
-
-        </div>
-
-        {/* Email Input */}
-        <form onSubmit={(e)=>submitHandler(e)} action="">
-      
-      
-         <div className="mt-4">
-          <label className="block text-sm mb-1 font-medium text-gray-700">Email</label>
-          <input
-            type="email"
-            placeholder="you@example.com"
-            onChange={(e)=>setEmail(e.target.value)}
-            className="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 ring-[#059363]"
-          />
-        </div>
-
-        {/* Password Input */}
-        <div className="mt-4">
-          <label className="block text-sm mb-1 font-medium text-gray-700">Password</label>
-          <input
-     
-            type="password"
-            placeholder="••••••••"
-             onChange={(e)=>setPassword(e.target.value)}
-            className="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 ring-[#059363]"
-          />
-        </div>
-       
-
-
-        {/* Login Button */}
-        <button  className="w-full mt-6 bg-[#059363] text-white py-3 rounded-lg text-lg font-semibold hover:bg-[#0A3D3F]  transition">
-          Continue
-        </button>
-
-        </form>
-
-        {/* Footer */}
-          <p className="text-xs text-center text-gray-500 mt-5">
-         if you dont have an account,
-          <span className="underline cursor-pointer"><Link to="/register" >please SignUp</Link></span> &{' '}
-         
-        </p>
-      </div>
+    {/* Back Arrow */}
+    <div className="absolute top-4 left-4 text-gray-500 text-xl cursor-pointer">
+      ←
     </div>
+
+    {/* Heading */}
+    <div className="flex flex-col items-center mb-5 mt-4">
+      <h2 className="text-xl sm:text-2xl font-bold text-center">Login</h2>
+    </div>
+
+    <form onSubmit={submitHandler}>
+
+      {/* Email */}
+      <div className="mt-3">
+        <label className="block text-sm mb-1 font-medium text-gray-700">
+          Email
+        </label>
+        <input
+          type="email"
+          placeholder="you@example.com"
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 border rounded-lg outline-none focus:ring-2 ring-[#059363]"
+        />
+      </div>
+
+      {/* Password */}
+      <div className="mt-3">
+        <label className="block text-sm mb-1 font-medium text-gray-700">
+          Password
+        </label>
+        <input
+          type="password"
+          placeholder="••••••••"
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 border rounded-lg outline-none focus:ring-2 ring-[#059363]"
+        />
+      </div>
+
+      {/* Button */}
+      <button className="w-full mt-6 bg-[#059363] text-white py-2.5 sm:py-3 rounded-lg text-base sm:text-lg font-semibold hover:bg-[#0A3D3F] transition">
+        Continue
+      </button>
+    </form>
+
+    {/* Footer */}
+    <p className="text-xs sm:text-sm text-center text-gray-500 mt-4">
+      If you don’t have an account,&nbsp;
+      <Link to="/register" className="underline cursor-pointer">
+        please Sign Up
+      </Link>
+    </p>
+  </div>
+</div>
+
   )
 }
 
