@@ -177,7 +177,7 @@ getaddress()
     showAddress==false ?(
        <div className="max-w-sm mx-auto shadow-lg bg-white  flex flex-col h-[100vh]  overflow-hidden">
          <div className="flex justify-between items-center border-b p-4 ">
-    <h2 className="text-2xl font-bold text-gray-800">My Cart</h2>
+    <h2 className="text-2xl font-semibold text-gray-800">My Cart</h2>
     <button
       onClick={onClose}
       className="p-2 rounded-full hover:bg-gray-100 transition"
@@ -203,42 +203,61 @@ getaddress()
       </button>
     </div>
 ) : (
-        addcartItems.map((item, index) => (
-          <div key={index} className="flex items-center justify-between border-b pb-3">
-            <div className="flex items-center gap-2">
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-16 h-16 rounded-md object-cover"
-              />
-              <div className="flex flex-col">
-                <p className="text-sm font-medium">{item.name}</p>
-                <p className="text-xs text-gray-500">Quantity:{item.quantity || 'N/A'}</p>
-                  <p className="text-sm font-medium">₹{item.price}</p>
-              </div>
-            </div>
-            {/* Quantity Adjuster */}
-            <div className="flex flex-col items-center gap-1">
-        
-              <div className="flex items-center border rounded-md overflow-hidden">
-                <button
-                  onClick={() => removeFromCart(item)}
-                  className="px-2 "
-                >
-                  <FaMinus />
-                </button>
-                <span className="p-1">{item.quantity}</span>
-                <button
-                  onClick={() => addTocart(item)}
-                  className="px-2  "
-                >
-           <FaPlus />
-                </button>
-              </div>
-            </div>
-  
-          </div>
-        ))
+       addcartItems.map((item, index) => (
+  <div
+    key={index}
+    className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-4 mb-4"
+  >
+    <div className="flex items-center justify-between">
+      
+      {/* Left side */}
+      <div className="flex items-center gap-3">
+        <img
+          src={item.image}
+          alt={item.name}
+          className="w-16 h-16 rounded-lg object-cover border"
+        />
+
+        <div className="flex flex-col">
+          <p className="text-sm font-semibold text-gray-800">
+            {item.name}
+          </p>
+
+          <p className="text-xs text-gray-500">
+            Quantity: {item.quantity || 'N/A'}
+          </p>
+
+          <p className="text-sm font-bold text-green-600">
+            ₹{item.price}
+          </p>
+        </div>
+      </div>
+
+      {/* Quantity Adjuster */}
+      <div className="flex items-center border rounded-lg overflow-hidden shadow-sm">
+        <button
+          onClick={() => removeFromCart(item)}
+          className="px-3 py-2 hover:bg-gray-100"
+        >
+          <FaMinus />
+        </button>
+
+        <span className="px-3 text-sm font-medium">
+          {item.quantity}
+        </span>
+
+        <button
+          onClick={() => addTocart(item)}
+          className="px-3 py-2 hover:bg-gray-100"
+        >
+          <FaPlus />
+        </button>
+      </div>
+
+    </div>
+  </div>
+))
+
       )}
     </div>
 
