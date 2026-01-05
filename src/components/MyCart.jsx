@@ -176,7 +176,7 @@ getaddress()
   return (
     showAddress==false ?(
        <div className="max-w-sm mx-auto shadow-lg bg-white  flex flex-col h-[100vh]  overflow-hidden">
-         <div className="flex justify-between items-center border-b p-4 ">
+         <div className="flex justify-between items-center  border-b border-gray-200 p-4 ">
     <h2 className="text-2xl font-semibold text-gray-800">My Cart</h2>
     <button
       onClick={onClose}
@@ -263,37 +263,48 @@ getaddress()
 
     {/* Bill Section */}
     {addcartItems.length > 0 && (
-      <div className="border-t px-4 py-4 bg-white space-y-2">
-        <div className="flex justify-between text-base font-medium text-gray-900">
-          <p>Subtotal</p>
-          <p>₹{totalPrice}</p>
-        </div>
-        <div className="flex justify-between text-base font-medium text-gray-900">
-          <p>Delivery</p>
-          <p>₹{delivery}</p>
-        </div>
-        <div className="flex justify-between text-base font-medium text-gray-900">
-          <p>Shipping</p>
-          <p>₹{handling}</p>
-        </div>
-        <div className="flex justify-between text-lg font-bold text-gray-900 border-t pt-2">
-          <p>Grand Total</p>
-          <p>₹{totalPrice + delivery +handling}</p>
-        </div>
-        <button
-          onClick={handleProceed}
-          className="mt-4 w-full bg-[#059363] text-white py-3 rounded-md font-medium "
-        >
-          Checkout
-        </button>
-      
-      </div>
+    <div
+  className="px-4 py-5 bg-white space-y-3
+             border border-gray-200 rounded-xl
+             shadow-[0_4px_14px_rgba(0,0,0,0.08)]"
+>
+  <div className="flex justify-between text-base font-medium text-gray-800">
+    <p>Subtotal</p>
+    <p>₹{totalPrice}</p>
+  </div>
+
+  <div className="flex justify-between text-base font-medium text-gray-800">
+    <p>Delivery</p>
+    <p>₹{delivery}</p>
+  </div>
+
+  <div className="flex justify-between text-base font-medium text-gray-800">
+    <p>Shipping</p>
+    <p>₹{handling}</p>
+  </div>
+
+  <div className="flex justify-between text-lg font-semibold text-gray-900
+                  border-t pt-3 mt-2">
+    <p>Grand Total</p>
+    <p>₹{totalPrice + delivery + handling}</p>
+  </div>
+
+  <button
+    onClick={handleProceed}
+    className="mt-4 w-full bg-[#059363] text-white py-3 rounded-lg
+               font-semibold text-base transition
+               shadow-md hover:shadow-lg active:scale-[0.98]"
+  >
+    Checkout
+  </button>
+</div>
+
     )}
     </div>):(
   <div className="max-w-2xl mx-auto my-4 bg-white rounded-2xl shadow-md overflow-hidden">
 
   {/* Header */}
-  <div className="flex justify-between items-center border-b p-3 ">
+  <div className="flex justify-between items-center  border-b border-gray-200 p-3 ">
     <h2 className="text-2xl font-semibold text-gray-800">Checkout</h2>
     <button
       onClick={handleBack}
@@ -376,53 +387,70 @@ getaddress()
 
   </div>
 
-  {/* Bill Section */}
-  <div className="px-6 py-6 border-t mt-6 bg-gray-50">
-    <div className="space-y-2 text-sm">
-      <div class="flex flex-row gap-5 overflow-x-auto no-scrollbar">
-     {getAddress.map((item,index)=>(
-  <div
-  key={index}
-  className="min-w-[260px] cursor-pointer"
-   onClick={() => setFormAddress(item)}
+<div
+  className="px-6 py-6 mt-6 bg-gray-50 border-t
+             shadow-[0_-6px_20px_rgba(0,0,0,0.08)]"
 >
-  <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5 
-                  hover:shadow-md hover:border-green-500 transition-all duration-200">
-    <p className="text-base font-semibold text-gray-800 tracking-wide">
-      Delivery Address
-    </p>
+  <div className="space-y-3 text-sm">
 
-    <div className="mt-3 text-gray-600 space-y-1 leading-relaxed">
-      <p className="font-medium text-gray-700 text-[15px]">
-        {item.houseAddress}
-      </p>
+    {/* Address Slider */}
+    <div className="flex flex-row gap-5 overflow-x-auto no-scrollbar">
+      {getAddress.map((item, index) => (
+        <div
+          key={index}
+          className="min-w-[260px] cursor-pointer"
+          onClick={() => setFormAddress(item)}
+        >
+          <div
+            className="bg-white border border-gray-200 rounded-2xl p-5
+                       shadow-sm hover:shadow-lg hover:border-green-500
+                       transition-all duration-200"
+          >
+            <p className="text-base font-semibold text-gray-800 tracking-wide">
+              Delivery Address
+            </p>
 
-      <p className="text-sm">
-        {item.city}, {item.state}
-      </p>
+            <div className="mt-3 text-gray-600 space-y-1 leading-relaxed">
+              <p className="font-medium text-gray-700 text-[15px]">
+                {item.houseAddress}
+              </p>
 
-      <p className="text-sm font-medium text-gray-700">
-        PIN — {item.postalCode}
-      </p>
+              <p className="text-sm">
+                {item.city}, {item.state}
+              </p>
+
+              <p className="text-sm font-medium text-gray-700">
+                PIN — {item.postalCode}
+              </p>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
+
+    {/* Grand Total */}
+    <div
+      className="flex justify-between items-center text-lg font-semibold
+                 text-gray-800 border-t pt-4 mt-3
+                 shadow-[0_-1px_6px_rgba(0,0,0,0.05)]"
+    >
+      <span>Grand Total</span>
+      <span className="text-green-600">₹{grandTotal}</span>
+    </div>
+
+    {/* Place Order Button */}
+    <button
+      onClick={handlePlaceOrder}
+      className="w-full mt-5 bg-black text-white py-3 rounded-xl
+                 font-semibold text-lg transition
+                 shadow-lg hover:shadow-xl active:scale-[0.98]"
+    >
+      Place Order
+    </button>
+
   </div>
 </div>
 
-     ))}
-     </div>
-      <div className="flex justify-between items-center text-lg font-semibold text-gray-800 border-t pt-4 mt-3">
-        <span>Grand Total</span>
-        <span className="text-green-600">₹{grandTotal}</span>
-      </div>
-
-      <button
-        onClick={handlePlaceOrder}
-        className="w-full mt-5 bg-black text-white py-3 rounded-xl font-semibold text-lg transition"
-      >
-        Place Order
-      </button>
-    </div>
-  </div>
 
 </div>
 ));
