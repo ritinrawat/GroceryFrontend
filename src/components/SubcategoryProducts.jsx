@@ -19,18 +19,18 @@ export default function SubcategoryProducts({ categoryId, subcategoryName = 'Pro
   useEffect(() => {
     if (!categoryId) return;
 
-  const fetchProducts = async () => {
+    const fetchProducts = async () => {
       setLoading(true);
       setError(null);
       const sessionId = localStorage.getItem("sessionId");
       try {
         const response = await fetch(`https://grocery-x2ds.onrender.com/subcategory?id=${categoryId}&sessionId=${sessionId}`);
-        
+
         if (!response.ok) throw new Error("404 or other error");
         const data = await response.json();
-        console.log("Fetched products:", data.products);    
-        setProducts(data.products); 
-        
+        console.log("Fetched products:", data.products);
+        setProducts(data.products);
+
 
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -42,7 +42,7 @@ export default function SubcategoryProducts({ categoryId, subcategoryName = 'Pro
 
     fetchProducts();
   }, [categoryId]);
-  
+
   return (
     <>
       <section className="px-2 sm:px-4 lg:px-6 py-2 sm:py-4">
@@ -57,8 +57,8 @@ export default function SubcategoryProducts({ categoryId, subcategoryName = 'Pro
           <div className="flex items-center justify-center py-4 sm:py-8">
             <div className="text-center">
               <p className="text-red-600 text-xs sm:text-sm mb-2">{error}</p>
-              <button 
-                onClick={() => window.location.reload()} 
+              <button
+                onClick={() => window.location.reload()}
                 className="px-2 py-1 sm:px-3 sm:py-1 bg-blue-500 text-white rounded text-xs sm:text-sm hover:bg-blue-600"
               >
                 Retry
@@ -66,13 +66,13 @@ export default function SubcategoryProducts({ categoryId, subcategoryName = 'Pro
             </div>
           </div>
         ) : (
-          <>  
-                      <h2 className="text-base sm:text-lg font-semibold mb-2 sm:mb-4">{subcategoryName}</h2>
-             <div className="grid grid-cols-2  sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3 lg:gap-4 ">
-               {(products.length > 0 ? products : fallbackProducts).map((product) => (
-                 <ProductCard key={product.id || product.name} product={product} subcategoryName={subcategoryName} />
-               ))}
-             </div>
+          <>
+            <h2 className="text-base sm:text-lg font-semibold mb-2 sm:mb-4">{subcategoryName}</h2>
+            <div className="grid grid-cols-2  sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3 lg:gap-4 ">
+              {(products.length > 0 ? products : fallbackProducts).map((product) => (
+                <ProductCard key={product.id || product.name} product={product} subcategoryName={subcategoryName} />
+              ))}
+            </div>
             {products.length === 0 && !loading && (
               <div className="text-center py-4 sm:py-8">
                 <p className="text-gray-500 text-sm sm:text-base">No products found in this category.</p>

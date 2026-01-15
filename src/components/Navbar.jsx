@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { FiSearch, FiShoppingCart } from "react-icons/fi";
+import { FaUser } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import MyCart from "./MyCart";
 import { useCart } from "../contextApi/Context.jsx";
+
 
 const Navbar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
   const [itemCount, setItemCount] = useState(0);
   const [search, setSearch] = useState("");
-  const [result, setResult] = useState("");
-  
-
- 
+  const [result, setResult] = useState([]);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   const { addcartItems, getCartItems } = useCart();
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const total = addcartItems.reduce(
@@ -54,169 +55,147 @@ const Navbar = () => {
     return () => clearTimeout(timer);
   }, [search]);
 
-
   const toggleCart = () => {
-    setIsCartOpen(!isCartOpen);  
+    setIsCartOpen(!isCartOpen);
   };
 
   return (
-<header className="bg-white shadow sticky top-0 z-50 ">
-  <div className="max-w-7xl mx-auto lg:p-5 p-3 ">
+    <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex flex-col md:flex-row items-center py-3 md:h-20 gap-4 md:gap-8">
 
-    {/* WRAPPER: Mobile => column, Desktop => row */}
-    <div className="flex flex-col md:flex-row md:items-start justify-between gap-3">
+          {/* Logo & Location Section */}
+          <div className="flex  items-center justify-between w-full md:w-auto gap-6">
+            <Link to="/" className="flex-shrink-0">
+              <div className="w-15 h-15 sm:w-28 sm:h-28 md:w-32 md:h-32 flex items-center">
+                <img
+                  src="../public/logo1.png"
+                  alt="Logo"
+                  className="w-full h-full object-contain max-w-[80px]"
+                />
+              </div>
+            </Link>
 
-      {/* TOP ROW FOR MOBILE: Logo + Buttons together */}
-      <div className="flex items-center gap-3 w-full md:w-auto justify-between">
-        
-        {/* Logo + Address (left side) */}
-        <div className="flex items-center gap-3">
-          <h1 className="text-2xl sm:text-3xl font-bold whitespace-nowrap">
-            <span className="text-[#059363]">blink</span>
-            <span className="text-[#059363]">it</span>
-          </h1>
 
-        </div>
+            {/* Delivery Location - Hidden on very small screens, visible elsewhere */}
 
-        {/* Account + Cart (right side - always visible on mobile) */}
-        <div className="flex items-center gap-3 md:hidden">
-          {token ? (
-            <div className="relative inline-block text-left">
-              <Link to="/myAccount"   className="px-3 py-1.5 bg-gray-100 text-[#0A3D3F] rounded-full border text-sm">
+
+            {/* Mobile Actions: Only shown when search is not full width on mobile */}
+            <div className="flex items-center gap-3 md:hidden">
+              {token ? (
+                <Link
+                  to="/myAccount"
+                  className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-gray-600"
+                >
+                  <FaUser className="text-sm" />
+                </Link>
+              ) : (
+                <Link to="/login" className="text-sm font-bold text-gray-700">Login</Link>
+              )}
+            </div>
+          </div>
+
+          {/* Search Bar Section */}
+          <div className="w-full relative group flex-grow order-3 md:order-2">
+            <div className={`relative flex items-center transition-all duration-300 ${isSearchFocused ? 'ring-2 ring-[#059363]/20 border-[#059363]' : 'bg-gray-50 border-gray-100'} border rounded-xl overflow-hidden`}>
+              <FiSearch className={`ml-4 text-xl ${isSearchFocused ? 'text-[#059363]' : 'text-gray-400'}`} />
+              <input
+                value={search}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                onChange={(e) => setSearch(e.target.value)}
+                type="text"
+                placeholder='Search "milk", "eggs" or "chips"'
+                className="w-full px-4 py-3 bg-transparent text-sm font-medium focus:outline-none placeholder:text-gray-400"
+              />
+            </div>
+
+            {/* Search Results Dropdown */}
+            {result.length > 0 && isSearchFocused && (
+              <div className="absolute left-0 right-0 top-full mt-2 bg-white shadow-2xl rounded-2xl border border-gray-100 overflow-hidden z-[60] animate-in fade-in zoom-in-95 duration-200">
+                <div className="max-h-96 overflow-y-auto custom-scrollbar">
+                  {result.map((item) => (
+                    <Link
+                      key={item._id}
+                      to="/detail"
+                      state={{ item }}
+                      onClick={() => setSearch("")}
+                      className="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0"
+                    >
+                      <img src={item.image} alt="" className="w-12 h-12 object-contain bg-gray-50 rounded-lg p-1" />
+                      <div className="flex-grow">
+                        <p className="text-sm font-bold text-gray-800">{item.name}</p>
+                        <p className="text-xs text-gray-500">{item.weight || 'Product'}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-black text-gray-900">₹{item.price}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Desktop Actions Section */}
+          <div className="hidden md:flex items-center gap-6 order-2  md:order-3">
+            {!token ? (
+              <Link to="/login" className="text-lg font-bold text-white  p-3 rounded-lg bg-[#059363]  ">
+                Login
+              </Link>
+            ) : (
+              <Link to="/myAccount" className="text-sm font-black text-gray-700 hover:text-[#059363] px-4 py-2 rounded-xl bg-gray-50 hover:bg-[#059363]/5 transition-all uppercase tracking-wider">
                 Account
               </Link>
+            )}
 
-            </div>
-          ) : (
-            <Link to="/login">
-              <button className="px-3 py-1.5 bg-[#059363] p-5 text-white rounded-md text-sm">
-                Login
-              </button>
-            </Link>
-          )}
-
-        {addcartItems.length > 0 ? (
-  <button
-  onClick={toggleCart}
-  className="relative flex items-center justify-center w-13 h-13 rounded-full bg-[#059363] text-white shadow-lg"
->
-  {/* Cart Icon */}
-  <FiShoppingCart className="text-lg" />
-
-  {/* Item Count Badge */}
-  {itemCount > 0 && (
-    <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-      {itemCount}
-    </span>
-  )}
-</button>
-) : (
-  <button
-    className="relative flex items-center justify-center w-13 h-13 rounded-full bg-gray-300 text-white shadow-lg"
-  >
-    <FiShoppingCart className="text-lg" />
-  </button>
-)}
-  </div>
-      </div>
-
-      {/* SEARCH BAR (placed in middle for desktop) */}
-      <div className="w-full md:max-w-xl order-3 md:order-2">
-        <div className="relative bg-gray-100 border border-gray-200 rounded-md">
-          <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            type="text"
-            placeholder='Search "Products"'
-            className="w-full pl-10 px-4 py-2 bg-gray-100 rounded-md text-sm focus:outline-none"
-          />
-        </div>
-
-        {result.length > 0 && (
-          <div className="absolute left-0 right-0 bg-white shadow-lg rounded-md mt-2 max-h-80 overflow-y-auto z-40">
-            {result.map((item) => (
-              <Link
-                key={item._id}
-                to="/detail"       
-                onClick={() => setSearch("")}         
-                state={{ item }}
-                className="flex items-center gap-3 p-3 border-b hover:bg-gray-50"
-              >
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-12 h-12 object-cover rounded-md"
-                />
-                <div>
-                  <p className="text-sm font-medium">{item.name}</p>
-                  {item.subcategory && (
-                    <p className="text-xs text-gray-500">
-                      {item.subcategory.name}
-                    </p>
-                  )}
-                  <p className="text-sm text-green-600 font-semibold">
-                    ₹{item.price}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* RIGHT SIDE: Account + Cart (DESKTOP ONLY) */}
-      <div className="hidden md:flex items-center gap-3 order-2 md:order-3">
-        {token ? (
-          <div className="relative inline-block text-left">
-            <Link
-             to="/myAccount"
-              className="px-3 py-1.5 bg-gray-100 text-[#0A3D3F] font-semibold rounded-full border"
-          
+            <button
+              onClick={toggleCart}
+              className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${itemCount > 0
+                ? 'bg-[#059363] text-white shadow-lg shadow-[#059363]/20 scale-105 cursor-pointer'
+                : 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-75'
+                }`}
             >
-              Account
-            </Link>
-          </div>
-        ) : (
-          <Link to="/login">
-            <button className="px-3 py-2 bg-[#059363] text-white rounded-md">
-            Login
+              <FiShoppingCart className="text-xl" />
+              {itemCount > 0 ? (
+                <div className="flex flex-col items-start leading-tight">
+                  <span className="text-xs font-bold uppercase tracking-tighter opacity-80">{itemCount} items</span>
+                  <span className="text-sm font-black">₹{totalPrice}</span>
+                </div>
+              ) : (
+                <span className="font-bold">My Cart</span>
+              )}
             </button>
-          </Link>
-        )}
+          </div>
+        </div>
+      </nav>
 
-        {addcartItems.length > 0 ? (
+      {/* Floating Cart Button for Mobile (Shows when items exist) */}
+      {itemCount > 0 && (
+        <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-[90%] pointer-events-none">
           <button
             onClick={toggleCart}
-            className="flex items-center  gap-2 px-4 py-2 cursor-pointer  bg-[#059363] text-white rounded-md shadow"
+            className="w-full pointer-events-auto bg-[#059363] text-white p-4 rounded-2xl flex items-center justify-between shadow-2xl shadow-[#059363]/40 active:scale-[0.98] transition-transform"
           >
-            <FiShoppingCart className="text-lg font-bold" />
-            <div className="text-left leading-tight ">
-              <div className="text-lg font-semibold">{itemCount} items</div>
-              <div className="text-sm font-semibold text-center">₹{totalPrice}</div>
+            <div className="flex items-center gap-3">
+              <div className="bg-white/20 p-2 rounded-lg text-white">
+                <FiShoppingCart size={20} />
+              </div>
+              <div className="flex flex-col items-start leading-none">
+                <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">{itemCount} Items</span>
+                <span className="text-sm font-bold">₹{totalPrice}</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-1 font-bold">
+              View Cart <span className="text-xl">›</span>
             </div>
           </button>
-        ) : (
-          <button className="flex items-center gap-2 px-4 py-4 bg-gray-200 rounded-md text-sm">
-            <FiShoppingCart/>
-            <span>My Cart</span>
-          </button>
-        )}
-      </div>
-    </div>
-  </div>
+        </div>
+      )}
 
-  {/* CART PANEL */}
-  {isCartOpen && (
-    <>
-      <div className="fixed inset-0 z-40 p-5 bg-black/50" onClick={toggleCart} />
-      <div className="fixed top-0 right-0 w-full sm:w-[380px] h-full z-50 bg-white shadow-lg">
-        <MyCart onClose={toggleCart} />
-      </div>
-    </>
-  )}
-</header>
-
+      {/* CART PANEL */}
+      {isCartOpen && <MyCart onClose={toggleCart} />}
+    </header>
   );
 };
 

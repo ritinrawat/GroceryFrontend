@@ -11,7 +11,7 @@
 
 //   // If token expired
 //   if (res.status === 401) {
-//     const refreshRes = await fetch('https://grocery-x2ds.onrender.com/auth/refresh', {
+//     const refreshRes = await fetch(`${https://grocery-x2ds.onrender.com}/auth/refresh`, {
 //       method: 'POST',
 //       credentials: 'include', // send refresh cookie
 //     });

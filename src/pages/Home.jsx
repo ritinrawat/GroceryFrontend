@@ -7,23 +7,14 @@ import Banner from "../components/Banner";
 import CategoryList from "../components/CategoryList";
 ;
 
-
-// import ProductCard from "../components/ProductCard"
-
-
 const Home = () => {
-
-  
   return (
     <div>
       <Navbar />
       <Banner />
 <CategoryList />     
 <HeroSection/>
-<Footer />
-          
-        
-        
+<Footer />    
     </div>
   );
 };

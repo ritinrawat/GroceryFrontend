@@ -60,7 +60,7 @@ const Footer = () => {
       flex items-center justify-between">
 
         <p className="text-[10px] sm:text-xs md:text-sm text-gray-400">
-          © Blink Commerce, 2025
+          © GreenBaskete, 2026
         </p>
 
         <div className="flex gap-3">

@@ -1,150 +1,176 @@
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { FaPlus, FaMinus, FaTimes } from "react-icons/fa";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { useCart } from "../contextApi/Context.jsx";
 import ReactMarkdown from "react-markdown";
 export default function ProductPage() {
+  const location = useLocation();
+  const { product, subcategoryName, item } = location.state || {};
+  const current = item || product;
 
-  const location=useLocation()
-  const {product,subcategoryName,item}=location.state;  
-  const current=item || product
-  console.log("Item",item)
-  console.log("Product",product)
-    const [selectedImage, setSelectedImage] = useState(current?.image);
- console.log("Current",current)
- useEffect(() => {
-  setSelectedImage(current?.image);
-}, [current?.image]);
-    const { addcartItems, addTocart, removeFromCart } = useCart([]);
-const currentItem = addcartItems.find(
-  (cart) => String(cart.productId) === String(current.id)
-);
-const quantity = currentItem ? currentItem.quantity : 0;
+  const [selectedImage, setSelectedImage] = useState(current?.image);
+  const { addcartItems, addTocart, removeFromCart } = useCart([]);
+
+  useEffect(() => {
+    if (current?.image) {
+      setSelectedImage(current.image);
+    }
+  }, [current]);
+
+  const currentItem = addcartItems.find(
+    (cart) => String(cart.productId) === String(current?.id || current?._id)
+  );
+  const quantity = currentItem ? currentItem.quantity : 0;
+
+  if (!current) {
+    return <div className="min-h-screen flex items-center justify-center">Loading product...</div>;
+  }
+
+  const allImages = [current.image, ...(current.images || [])].filter(Boolean);
 
   return (
-    <>
-    <Navbar/>
-<div className="w-full">
-  {/* GRID → Mobile = single column, Desktop = 2 columns */}
-  <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 p-0 md:p-6">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <Navbar />
 
-    {/* LEFT SECTION → Images */}
-    <div className="bg-white flex flex-col items-center">
-      {/* Mobile: Full width | Desktop: Medium width */}
-      <img
-        src={selectedImage}
-        alt={current?.name}
-        className="
-          w-full 
-          h-64 
-          object-cover 
-          md:object-contain 
-          md:w-[80%] 
-          md:h-[380px] 
-          rounded-md
-        "
-      />
+      <main className="flex-grow">
+        <div className="max-w-7xl mx-auto px-4 py-4 md:py-8">
 
-      {/* Thumbnails */}
-      <div className="flex gap-3 overflow-x-auto no-scrollbar px-3 py-2 mt-2 w-full md:w-[80%]">
-        {[current?.image, ...current?.images].map((img, idx) => (
-          <img
-            key={idx}
-            src={img}
-            onClick={() => setSelectedImage(img)}
-            className={`w-14 h-14 rounded-md border cursor-pointer
-              ${selectedImage === img ? "border-green-600" : "border-gray-300"}`}
-          />
-        ))}
-      </div>
+          {/* Breadcrumb - Hidden on mobile for cleaner look */}
+          <nav className="hidden md:flex items-center gap-2 text-xs font-semibold text-gray-400 mb-6 uppercase tracking-widest">
+            <Link to="/" className="hover:text-[#059363] transition-colors">Home</Link>
+            <span>/</span>
+            <span className="hover:text-[#059363] transition-colors">{current?.subcategory?.name || subcategoryName}</span>
+            <span>/</span>
+            <span className="text-gray-900">{current?.name}</span>
+          </nav>
+
+          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-2">
+
+              {/* Left: Product Images */}
+              <div className="p-4 md:p-8 border-b lg:border-b-0 lg:border-r border-gray-100 bg-white">
+                <div className="sticky top-28 space-y-6">
+                  <div className="relative aspect-square rounded-2xl overflow-hidden bg-gray-50/50 flex items-center justify-center p-4">
+                    <img
+                      src={selectedImage}
+                      alt={current.name}
+                      className="max-h-full max-w-full object-contain hover:scale-110 transition-transform duration-500"
+                    />
+                  </div>
+
+                  {/* Thumbnails */}
+                  {allImages.length > 1 && (
+                    <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+                      {allImages.map((img, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setSelectedImage(img)}
+                          className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-xl border-2 overflow-hidden transition-all ${selectedImage === img ? "border-[#059363] bg-[#059363]/5" : "border-gray-100 hover:border-gray-200"
+                            }`}
+                        >
+                          <img src={img} alt="" className="w-full h-full object-contain p-1" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Right: Product Details */}
+              <div className="p-6 md:p-10 lg:p-14 flex flex-col">
+                <div className="flex-grow">
+                  <span className="inline-block px-3 py-1 bg-gray-100 text-gray-600 text-[10px] font-bold rounded-full uppercase tracking-wider mb-4">
+                    {current.weight || '750g'}
+                  </span>
+
+                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-gray-900 leading-tight mb-2">
+                    {current.name}
+                  </h1>
+
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex items-center gap-1 bg-yellow-400 text-black px-2 py-0.5 rounded text-xs font-bold">
+                      <span>⚡</span> 10 MINS
+                    </div>
+                    <span className="text-gray-400 text-sm">|</span>
+                    <span className="text-[#059363] text-sm font-bold">In Stock</span>
+                  </div>
+
+                  <div className="mb-8">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-black text-gray-900">₹{current.price}</span>
+                      <span className="text-sm text-gray-400 font-medium">MRP ₹{Math.round(current.price * 1.2)}</span>
+                    </div>
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wide mt-1">(Inclusive of all taxes)</p>
+                  </div>
+
+                  <div className="space-y-4 mb-10">
+                    <h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest">Product Description</h3>
+                    <div
+                      className="text-gray-600 text-sm md:text-base leading-relaxed prose prose-sm max-w-none"
+                      dangerouslySetInnerHTML={{ __html: current.description || current.discription }}
+                    />
+                  </div>
+
+                  {/* Add to Cart Section */}
+                  <div className="flex flex-col sm:flex-row gap-4 sticky bottom-4 sm:static md:mb-10">
+                    {quantity === 0 ? (
+                      <button
+                        onClick={() => addTocart(current)}
+                        className="flex-grow bg-[#059363] text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-[#059363]/20 hover:shadow-[#059363]/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                      >
+                        Add to Cart <FaPlus size={14} />
+                      </button>
+                    ) : (
+                      <div className="flex-grow bg-[#059363] text-white py-4 rounded-2xl flex items-center justify-between px-8 shadow-xl shadow-[#059363]/20">
+                        <button
+                          onClick={() => removeFromCart(current)}
+                          className="hover:bg-white/10 p-2 rounded-lg transition-colors"
+                        >
+                          <FaMinus size={18} />
+                        </button>
+                        <div className="flex flex-col items-center">
+                          <span className="text-xs font-bold uppercase opacity-80 tracking-widest">{quantity} in cart</span>
+                          <span className="text-xl font-black">Added</span>
+                        </div>
+                        <button
+                          onClick={() => addTocart(current)}
+                          className="hover:bg-white/10 p-2 rounded-lg transition-colors"
+                        >
+                          <FaPlus size={18} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Why Shop From Us Section */}
+                <div className="mt-12 pt-10 border-t border-gray-100">
+                  <h4 className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Why shop from blinkit?</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="flex flex-col gap-2">
+                      <div className="w-10 h-10 bg-yellow-50 rounded-xl flex items-center justify-center text-xl">⚡</div>
+                      <p className="text-xs font-bold text-gray-900 leading-tight">Superfast delivery from stores near you</p>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center text-xl">💰</div>
+                      <p className="text-xs font-bold text-gray-900 leading-tight">Best prices & offers directly from manufacturers</p>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-xl">🛒</div>
+                      <p className="text-xs font-bold text-gray-900 leading-tight">5000+ products across categories</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
     </div>
-
-    {/* RIGHT SECTION → Details */}
-    <div className="bg-white px-3 py-4 md:px-0 md:py-0">
-
-      {/* Breadcrumb */}
-      <nav className="text-xs text-gray-500 mb-2 md:mb-4">
-        Home / {current?.subcategory?.name || subcategoryName} / {current?.name}
-      </nav>
-      {/* Name */}
-      <h1 className="text-lg md:text-2xl font-semibold leading-tight">
-        {current?.name}
-      </h1>
-      <p className="text-gray-500 text-xs md:text-sm mt-1">⏱ 10 MINS</p>
-
-      {/* Price */}
-      <p className="text-xl md:text-2xl font-semibold mt-3">₹{current?.price}</p>
-
-      <p className="text-gray-500 text-xs mt-1">(Inclusive of all taxes)</p>
-
-      {/* Description */}
-      
-  <p
-  className="text-sm md:text-base text-gray-700 mt-3 leading-tight"
-  dangerouslySetInnerHTML={{
-    __html: current?.description || current?.discription
-  }}
-/>
-
-
-      {/* Cart Buttons */}
-      {quantity === 0 ? (
-        <button
-          onClick={() => addTocart(current)}
-          className="w-full md:w-48 bg-green-600 text-white py-3 rounded-lg mt-4 cursor-pointer text-sm font-medium"
-        >
-          Add to cart
-        </button>
-      ) : (
-        <div className="w-full cursor-pointer  md:w-48 bg-green-600 text-white py-3 rounded-lg mt-4 flex justify-center items-center gap-4">
-          <FaMinus
-            onClick={() => removeFromCart(current)}
-            className="text-sm cursor-pointer"
-          />
-          <span className="text-sm">{quantity}</span>
-          <FaPlus
-            onClick={() => addTocart(current)}
-            className="text-sm cursor-pointer"
-          />
-        </div>
-      )}
-
-      {/* Why Blinkit */}
-      <div className="mt-8">
-        <h2 className="text-base md:text-lg font-semibold mb-3">
-          Why shop from blinkit?
-        </h2>
-
-        <div className="flex gap-3 items-start mb-3">
-          <span className="text-yellow-500 text-xl">⚡</span>
-          <p className="text-sm md:text-base text-gray-600 leading-tight">
-            Superfast delivery from stores near you.
-          </p>
-        </div>
-
-        <div className="flex gap-3 items-start mb-3">
-          <span className="text-yellow-600 text-xl">💰</span>
-          <p className="text-sm md:text-base text-gray-600 leading-tight">
-            Best prices & offers directly from manufacturers.
-          </p>
-        </div>
-
-        <div className="flex gap-3 items-start mb-3">
-          <span className="text-green-600 text-xl">🛒</span>
-          <p className="text-sm md:text-base text-gray-600 leading-tight">
-            5000+ products across categories.
-          </p>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-
-    <Footer/>
-       </>
   );
 }
+

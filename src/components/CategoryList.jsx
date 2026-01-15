@@ -6,12 +6,12 @@ import Trending from './Trending';
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
- 
+
 
   useEffect(() => {
     const fetchapi = async () => {
       try {
-        const response = await fetch('https://grocery-x2ds.onrender.com/data');
+        const response = await fetch(`https://grocery-x2ds.onrender.com/data`);
         const data = await response.json();
         console.log('Fetched categories:', data.data);
         setCategories(data.data);
