@@ -152,12 +152,7 @@ function Login() {
         </div>
 
         {/* Floating Logo for Mobile */}
-        <div className="absolute top-8 left-1/2 -translate-x-1/2 lg:hidden">
-          <h1 className="text-3xl font-black tracking-tight flex items-center">
-            <span className="text-yellow-400">blink</span>
-            <span className="text-[#059363]">it</span>
-          </h1>
-        </div>
+   
       </div>
     </div>
   );
