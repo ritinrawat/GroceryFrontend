@@ -50,9 +50,7 @@ export default function MyCart({ onClose }) {
       handleCOD()
     }
   };
-  const handleBack = () => {
-    setShowAddress(false); // go back to cart
-  };
+ 
   useEffect(() => {
     const total = addcartItems.reduce(
       (sum, item) => sum + item.price * item.quantity,
