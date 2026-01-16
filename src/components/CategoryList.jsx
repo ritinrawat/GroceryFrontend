@@ -41,9 +41,9 @@ const CategoryList = () => {
               <Link
                 key={item.id || item._id}
                 to={`/maincat/${item.id || item._id}`}
-                className="min-w-[140px] group bg-white shadow-md rounded-2xl p-5 flex flex-col items-center text-center"
+                className="group bg-white shadow-md rounded-2xl p-5 flex flex-col items-center text-center hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 border border-gray-200"
               >
-                <div className="w-30 h-30 mb-3 rounded-full bg-white flex items-center justify-center overflow-hidden border border-emerald-200">
+                <div className="w-25 h-25 mb-3 rounded-full bg-white flex items-center justify-center overflow-hidden border border-emerald-200">
                   <img
                     src={item.categoryImage}
                     alt={item.categoryName}
