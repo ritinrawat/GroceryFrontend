@@ -36,12 +36,12 @@ const CategoryList = () => {
             <p className="text-gray-500">No categories available right now.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4  lg:grid-cols-5 xl:grid-cols-6 gap-5">
+          <div className="flex sm:grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 overflow-x-auto sm:overflow-visible">
             {categories.map((item) => (
               <Link
                 key={item.id || item._id}
                 to={`/maincat/${item.id || item._id}`}
-                className="group bg-white shadow-md rounded-2xl p-5 flex flex-col items-center text-center hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 border border-gray-200"
+                className="min-w-[140px] group bg-white shadow-md rounded-2xl p-5 flex flex-col items-center text-center"
               >
                 <div className="w-30 h-30 mb-3 rounded-full bg-white flex items-center justify-center overflow-hidden border border-emerald-200">
                   <img
