@@ -69,7 +69,7 @@ const Navbar = () => {
             <Link to="/" className="flex-shrink-0">
               <div className="w-15 h-15 sm:w-28 sm:h-28 md:w-32 md:h-32 flex items-center">
                 <img
-                  src="../public/logo1.png"
+                  src="/logo1.png"
                   alt="Logo"
                   className="w-full h-full object-contain max-w-[80px]"
                 />
@@ -90,7 +90,7 @@ const Navbar = () => {
                   <FaUser className="text-sm" />
                 </Link>
               ) : (
-                <Link to="/login" className="text-sm font-bold bg-[#059363] text-white">Login</Link>
+                <Link to="/login" className="text-sm font-bold bg-[#059363] p-3 text-white">Login</Link>
               )}
             </div>
           </div>
@@ -140,7 +140,7 @@ const Navbar = () => {
           {/* Desktop Actions Section */}
           <div className="hidden md:flex items-center gap-6 order-2  md:order-3">
             {!token ? (
-              <Link to="/login" className="text-lg font-bold text-white  p-3 rounded-lg bg-[#059363]  ">
+              <Link to="/login" className="text-lg font-bold text-white p-3 rounded-lg bg-[#059363]  ">
                 Login
               </Link>
             ) : (
