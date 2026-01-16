@@ -30,9 +30,11 @@ export default function MyCart({ onClose }) {
       ...formAddress, [e.target.name]: e.target.value,
     });
   };
-  const isFilled = (obj) => obj && Object.values(obj).every((v) => v.trim() !== "");
 
-  const isAddressValid = isFilled(formAddress);
+const isAddressValid = ["houseAddress", "city", "state", "postalCode"].every(
+  (key) => formAddress[key]?.toString().trim()
+);
+
 
   console.log("address", isAddressValid)
 
@@ -50,7 +52,7 @@ export default function MyCart({ onClose }) {
       handleCOD()
     }
   };
- 
+
   useEffect(() => {
     const total = addcartItems.reduce(
       (sum, item) => sum + item.price * item.quantity,
@@ -86,16 +88,28 @@ export default function MyCart({ onClose }) {
     });
 
     const data = await res.json();
+    if (!res.ok) {
+      console.error("Order creation failed:", data.message || "Unknown error");
+      return null;
+    }
     return data.orderId;  // backend returns orderId
   };
   const handleOnlinePayment = async () => {
     const loaded = await loadRazorpay("https://checkout.razorpay.com/v1/checkout.js");
     if (!loaded) return alert("Failed to load Razorpay");
     const orderId = await createOrder("online");
-    openRazorpayCheckout(orderId);
+    if (orderId) {
+      openRazorpayCheckout(orderId);
+    } else {
+      alert("Failed to create order. Please try again.");
+    }
   };
   const handleCOD = async () => {
     const orderId = await createOrder("cod");
+    if (!orderId) {
+      alert("Failed to place order. Please try again.");
+      return;
+    }
     Swal.fire({
       title: "🎉 Order Placed!",
       text: "Thank you for shopping with us.",
@@ -338,15 +352,25 @@ export default function MyCart({ onClose }) {
                       />
                     </div>
                     <div>
-                      <label className="text-[11px] font-bold text-gray-400 uppercase ml-1">Postal Code</label>
+                      <label className="text-[11px] font-bold text-gray-400 uppercase ml-1">State</label>
                       <input
-                        name="postalCode"
-                        value={formAddress.postalCode}
+                        name="state"
+                        value={formAddress.state}
                         onChange={handleChange}
-                        placeholder="400001"
+                        placeholder="State"
                         className="mt-1 w-full bg-gray-50 border-gray-100 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-[#059363]/20 focus:border-[#059363] outline-none transition-all text-sm"
                       />
                     </div>
+                  </div>
+                  <div>
+                    <label className="text-[11px] font-bold text-gray-400 uppercase ml-1">Postal Code</label>
+                    <input
+                      name="postalCode"
+                      value={formAddress.postalCode}
+                      onChange={handleChange}
+                      placeholder="400001"
+                      className="mt-1 w-full bg-gray-50 border-gray-100 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-[#059363]/20 focus:border-[#059363] outline-none transition-all text-sm"
+                    />
                   </div>
                 </div>
               </div>
