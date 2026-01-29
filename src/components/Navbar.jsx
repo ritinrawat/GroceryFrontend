@@ -90,7 +90,7 @@ const Navbar = () => {
                   <FaUser className="text-sm" />
                 </Link>
               ) : (
-                <Link to="/login" className="text-sm font-bold bg-[#059363] p-3 text-white">Login</Link>
+                <Link to="/login" className="text-sm font-bold bg-[#059363] p-3 rounded-lg text-white">Login</Link>
               )}
             </div>
           </div>

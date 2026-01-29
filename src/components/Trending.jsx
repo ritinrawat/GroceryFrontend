@@ -27,9 +27,9 @@ export function List({ setcatProducts }) {
     .sort((a, b) => Number(a.sortno) - Number(b.sortno)); //
   return (
     <div>
-      <section className="px-6 py-4 animate-fade-in">
-        <h2 className="text-xl font-semibold mb-3">Latest Products</h2>
-        <div className="flex gap-4 overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden pb-2">
+      <section className="px-4 py-4 animate-fade-in">
+        <h2 className="text-xl font-bold mb-3 text-gray-900 px-2 sm:px-0">Latest Products</h2>
+        <div className="flex gap-3 overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden pb-2 px-2 sm:px-0">
           {trendingdata.map((item, idx) => {
             const cardKey = item._id || item.id || idx;
             // normalize trending product shape for ProductCard
@@ -42,12 +42,11 @@ export function List({ setcatProducts }) {
               weight: item.weight || item.netWeight || "",
               price: item.productPrice || item.price || 0,
             };
-            console.log("Normalized trending product", normalized);
 
             return (
               <div
                 key={cardKey}
-                className="min-w-[140px] sm:min-w-[170px] max-w-[220px] md:min-w-[200px] flex-shrink-0"
+                className="min-w-[125px] sm:min-w-[170px] max-w-[150px] sm:max-w-none flex-shrink-0"
               >
                 <ProductCard product={normalized} />
               </div>
@@ -57,7 +56,7 @@ export function List({ setcatProducts }) {
 
       </section>
 
-      <div className="p-4 space-y-8">
+      <div className="px-4 py-4 space-y-8">
         {filteredCategories?.map((category, index) => {
           // ✅ Get all products from subcategories
           const allProducts = category.subcategories?.flatMap(
@@ -67,23 +66,25 @@ export function List({ setcatProducts }) {
           const latestProducts = allProducts?.slice(-7).reverse();
 
           return (
-            <div key={index}>
+            <div key={index} className="last:pb-8">
               {/* 🏷 Category Header */}
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-3 px-2 sm:px-0">
                 <div className="flex items-center gap-2">
-                  <img
-                    src={category.categoryImage}
-                    alt={category.categoryName}
-                    className="w-10 h-10 object-cover rounded-full border"
-                  />
-                  <h2 className="text-lg font-semibold capitalize">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 border rounded-full overflow-hidden bg-white">
+                    <img
+                      src={category.categoryImage}
+                      alt={category.categoryName}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <h2 className="text-lg font-bold capitalize text-gray-900">
                     {category.categoryName}
                   </h2>
                 </div>
               </div>
 
               {/* 🛍 Horizontal Scroll Product List using ProductCard */}
-              <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 px-2 sm:px-0">
                 {latestProducts?.map((product, i) => {
                   // Normalize product shape so ProductCard can consume it
                   const normalized = {
@@ -97,7 +98,7 @@ export function List({ setcatProducts }) {
                   return (
                     <div
                       key={normalized.id || i}
-                      className="min-w-[140px] sm:min-w-[170px] max-w-[220px] md:min-w-[200px] flex-shrink-0"
+                      className="min-w-[125px] sm:min-w-[170px] max-w-[150px] sm:max-w-none flex-shrink-0"
                     >
                       <ProductCard product={normalized} subcategoryName={category.categoryName} />
                     </div>
@@ -105,7 +106,7 @@ export function List({ setcatProducts }) {
                 })}
 
                 {(!latestProducts || latestProducts.length === 0) && (
-                  <p className="text-gray-500 text-center">No products available</p>
+                  <p className="text-gray-500 text-center w-full py-4 text-sm">No products available</p>
                 )}
               </div>
             </div>
