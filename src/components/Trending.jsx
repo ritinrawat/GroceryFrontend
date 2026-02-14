@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
 import ProductCard from './ProductCard';
 
 
@@ -27,9 +28,11 @@ export function List({ setcatProducts }) {
     .sort((a, b) => Number(a.sortno) - Number(b.sortno)); //
   return (
     <div>
-      <section className="px-4 py-4 animate-fade-in">
-        <h2 className="text-xl font-bold mb-3 text-gray-900 px-2 sm:px-0">Latest Products</h2>
-        <div className="flex gap-3 overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden pb-2 px-2 sm:px-0">
+      <section className="px-0 py-4 animate-fade-in">
+        <h2 className="text-xl md:text-2xl font-bold mb-6 text-[#1f1f1f] px-2 sm:px-0 tracking-tight">
+          Latest Products
+        </h2>
+        <div className="flex gap-4 sm:gap-6 overflow-x-auto scroll-smooth no-scrollbar pb-4 px-2 sm:px-0">
           {trendingdata.map((item, idx) => {
             const cardKey = item._id || item.id || idx;
             // normalize trending product shape for ProductCard
@@ -46,7 +49,7 @@ export function List({ setcatProducts }) {
             return (
               <div
                 key={cardKey}
-                className="min-w-[125px] sm:min-w-[170px] max-w-[150px] sm:max-w-none flex-shrink-0"
+                className="min-w-[140px] sm:min-w-[180px] md:min-w-[200px] flex-shrink-0"
               >
                 <ProductCard product={normalized} />
               </div>
@@ -56,35 +59,41 @@ export function List({ setcatProducts }) {
 
       </section>
 
-      <div className="px-4 py-4 space-y-8">
+      <div className="px-0 py-4 space-y-12">
         {filteredCategories?.map((category, index) => {
           // ✅ Get all products from subcategories
           const allProducts = category.subcategories?.flatMap(
             (sub) => sub.products || []
           );
           // ✅ Show only latest 7
-          const latestProducts = allProducts?.slice(-7).reverse();
+          const latestProducts = allProducts?.slice(-10).reverse();
 
           return (
             <div key={index} className="last:pb-8">
               {/* 🏷 Category Header */}
-              <div className="flex items-center justify-between mb-3 px-2 sm:px-0">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 border rounded-full overflow-hidden bg-white">
+              <div className="flex items-center justify-between mb-5 px-2 sm:px-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden bg-gray-50 border border-gray-100 p-1">
                     <img
                       src={category.categoryImage}
                       alt={category.categoryName}
                       className="w-full h-full object-contain"
                     />
                   </div>
-                  <h2 className="text-lg font-bold capitalize text-gray-900">
+                  <h2 className="text-lg sm:text-xl font-bold capitalize text-[#1f1f1f] tracking-tight">
                     {category.categoryName}
                   </h2>
                 </div>
+                <Link
+                  to={`/maincat/${category.id || category._id}`}
+                  className="text-sm font-bold text-[#0c831f] hover:text-[#0a6e1a] transition-colors"
+                >
+                  See all
+                </Link>
               </div>
 
               {/* 🛍 Horizontal Scroll Product List using ProductCard */}
-              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 px-2 sm:px-0">
+              <div className="flex gap-4 sm:gap-6 overflow-x-auto no-scrollbar pb-4 px-2 sm:px-0">
                 {latestProducts?.map((product, i) => {
                   // Normalize product shape so ProductCard can consume it
                   const normalized = {
@@ -98,7 +107,7 @@ export function List({ setcatProducts }) {
                   return (
                     <div
                       key={normalized.id || i}
-                      className="min-w-[125px] sm:min-w-[170px] max-w-[150px] sm:max-w-none flex-shrink-0"
+                      className="min-w-[140px] sm:min-w-[180px] md:min-w-[200px] flex-shrink-0"
                     >
                       <ProductCard product={normalized} subcategoryName={category.categoryName} />
                     </div>
